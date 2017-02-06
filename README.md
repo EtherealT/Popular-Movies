@@ -3,6 +3,8 @@ __Before running__ : create an abstract class _Values.java_ that contains your a
 put the file in package _com.tobiadeyinka.popularmovies.config_:
 
 ```java
+package com.tobiadeyinka.popularmovies.config;
+
 public abstract class Values {
 
     public static String MOVIE_DB_API_KEY = "your api key";
