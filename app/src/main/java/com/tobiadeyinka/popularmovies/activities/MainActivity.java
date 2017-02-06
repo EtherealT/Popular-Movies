@@ -1,14 +1,17 @@
 package com.tobiadeyinka.popularmovies.activities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.Movie;
@@ -94,6 +97,9 @@ public class MainActivity extends AppCompatActivity{
         protected String doInBackground(QueryType... queryTypes) {
             QueryType queryType = queryTypes[0];
 
+            if(!isOnline())
+                return null;
+
             switch (queryType){
                 case POPULAR:
                     try {
@@ -116,6 +122,11 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String s) {
+            if (s == null) {
+                Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             try {
                 JSONObject object = new JSONObject(s);
                 JSONArray results = object.getJSONArray("results");
@@ -140,6 +151,12 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

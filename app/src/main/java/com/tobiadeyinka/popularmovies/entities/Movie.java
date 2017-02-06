@@ -6,7 +6,7 @@ package com.tobiadeyinka.popularmovies.entities;
 
 public class Movie {
 
-    int id;
+    private int id;
     private String title;
     private String releaseDate;
     private String moviePoster;
@@ -20,6 +20,10 @@ public class Movie {
         this.moviePoster = moviePoster;
         this.voteAverage = voteAverage;
         this.plotSynopsis = plotSynopsis;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

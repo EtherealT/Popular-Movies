@@ -41,6 +41,18 @@ public class MovieQuery {
         return null;
     }
 
+    public static String getMovieDetails(int movieId) throws IOException {
+        URL url = null;
+        try {
+            url = new URL("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US");
+            return query(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private static String query(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
