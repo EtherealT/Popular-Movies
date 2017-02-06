@@ -1,23 +1,23 @@
 package com.tobiadeyinka.popularmovies.entities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
+import android.view.ViewGroup;
+import android.content.Intent;
+import android.content.Context;
+import android.net.NetworkInfo;
+import android.widget.ImageView;
+import android.view.LayoutInflater;
+import android.net.ConnectivityManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author Tobi Adeyinka
@@ -25,8 +25,8 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    List<Movie> data = Collections.EMPTY_LIST;
-    Context context;
+    private List<Movie> data = Collections.EMPTY_LIST;
+    private Context context;
 
     public MovieAdapter(ArrayList<Movie> data) {
        this.data = data;
@@ -78,7 +78,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder{
-
         ImageView posterImageView;
 
         public MovieViewHolder(View itemView) {
@@ -90,9 +89,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Movie movie = data.get(listIndex);
             Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster()).into(posterImageView);
         }
-
     }
-
 
     private boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

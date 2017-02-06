@@ -1,27 +1,27 @@
 package com.tobiadeyinka.popularmovies.activities;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.AsyncTask;
+import android.widget.Toast;
+import android.view.MenuItem;
+import android.net.NetworkInfo;
+import android.content.Context;
+import android.view.MenuInflater;
+import android.net.ConnectivityManager;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.Movie;
-import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
 import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
+import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,9 +32,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
+    private ArrayList<Movie> data;
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
-    ArrayList<Movie> data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity{
         new MovieQueryTask().execute(QueryType.POPULAR);
 
         recyclerView = (RecyclerView)findViewById(R.id.rv_movies);
-
         RecyclerView.LayoutManager layoutManager;
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);

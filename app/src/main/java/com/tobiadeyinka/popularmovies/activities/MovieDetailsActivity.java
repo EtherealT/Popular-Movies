@@ -1,19 +1,19 @@
 package com.tobiadeyinka.popularmovies.activities;
 
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.AsyncTask;
+import android.content.Intent;
+import android.widget.TextView;
+import android.widget.ImageView;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -31,7 +31,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
         new QueryTask().execute(id);
-
     }
 
     private class QueryTask extends AsyncTask<Integer, Void, String>{
