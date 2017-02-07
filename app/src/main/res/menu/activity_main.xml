@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="Most popular"
+        android:title="@string/most_popular"
         android:id="@+id/popularity"
         />
 
     <item
-        android:title="Highest rated"
+        android:title="@string/highest_rating"
         android:id="@+id/rating"
         />
 

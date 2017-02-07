@@ -6,12 +6,12 @@ package com.tobiadeyinka.popularmovies.entities;
 
 public class Movie {
 
-    private int id;
-    private String title;
-    private String releaseDate;
-    private String moviePoster;
-    private String voteAverage;
-    private String plotSynopsis;
+    private final int id;
+    private final String title;
+    private final String releaseDate;
+    private final String moviePoster;
+    private final String voteAverage;
+    private final String plotSynopsis;
 
     public Movie(int id, String title, String releaseDate, String moviePoster, String voteAverage, String plotSynopsis) {
         this.id = id;

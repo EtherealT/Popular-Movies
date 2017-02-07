@@ -42,7 +42,7 @@ public class MovieQuery {
     }
 
     public static String getMovieDetails(int movieId) throws IOException {
-        URL url = null;
+        URL url;
         try {
             url = new URL("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US");
             return query(url);

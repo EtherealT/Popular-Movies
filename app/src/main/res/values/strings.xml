@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+    <string name="generic_image_description">generic image description</string>
+    <string name="most_popular">Most popular</string>
+    <string name="highest_rating">Highest rating</string>
+    <string name="runtime">%1$s mins</string>
+    <string name="vote_average">%1$s/10</string>
 </resources>

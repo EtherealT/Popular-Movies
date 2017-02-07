@@ -58,17 +58,21 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 String runtime = object.getString("runtime");
 
                 TextView titleTextView = (TextView)findViewById(R.id.tv_movie_title);
-                ImageView posterImageView = (ImageView)findViewById(R.id.poster_image_view);
-                TextView yearTextView = (TextView)findViewById(R.id.year_text_view);
-                TextView runtimeTextView = (TextView)findViewById(R.id.runtime_text_view);
-                TextView ratingTextView = (TextView)findViewById(R.id.rating_text_view);
-                TextView synopsisTextView = (TextView)findViewById(R.id.synopsis_text_view);
-
                 titleTextView.setText(title);
+
+                ImageView posterImageView = (ImageView)findViewById(R.id.poster_image_view);
                 Picasso.with(getApplicationContext()).load("https://image.tmdb.org/t/p/w500/" + moviePoster).into(posterImageView);
+
+                TextView yearTextView = (TextView)findViewById(R.id.year_text_view);
                 yearTextView.setText(releaseDate.substring(0,4));
-                runtimeTextView.setText(runtime + " mins");
-                ratingTextView.setText(voteAverage + "/10");
+
+                TextView runtimeTextView = (TextView)findViewById(R.id.runtime_text_view);
+                runtimeTextView.setText(getString(R.string.runtime, runtime));
+
+                TextView ratingTextView = (TextView)findViewById(R.id.rating_text_view);
+                ratingTextView.setText(getString(R.string.vote_average, voteAverage));
+
+                TextView synopsisTextView = (TextView)findViewById(R.id.synopsis_text_view);
                 synopsisTextView.setText(plotSynopsis);
 
             } catch (JSONException e) {

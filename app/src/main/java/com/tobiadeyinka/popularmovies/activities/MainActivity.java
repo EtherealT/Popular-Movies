@@ -33,7 +33,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity{
 
     private ArrayList<Movie> data;
-    private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
 
     @Override
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity{
         data = new ArrayList<>();
         new MovieQueryTask().execute(QueryType.POPULAR);
 
-        recyclerView = (RecyclerView)findViewById(R.id.rv_movies);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         RecyclerView.LayoutManager layoutManager;
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
-    class MovieQueryTask extends AsyncTask<QueryType, Void, String> {
+    private class MovieQueryTask extends AsyncTask<QueryType, Void, String> {
 
         @Override
         protected String doInBackground(QueryType... queryTypes) {

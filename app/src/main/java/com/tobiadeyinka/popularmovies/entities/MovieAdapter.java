@@ -17,7 +17,6 @@ import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Tobi Adeyinka
@@ -25,7 +24,7 @@ import java.util.Collections;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
 
-    private List<Movie> data = Collections.EMPTY_LIST;
+    private final List<Movie> data;
     private Context context;
 
     public MovieAdapter(ArrayList<Movie> data) {
@@ -37,9 +36,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         context = parent.getContext();
         int layoutIdForListItem = R.layout.movie_list_item;
         final LayoutInflater inflater = LayoutInflater.from(context);
-        boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutIdForListItem, parent, false);
         final MovieViewHolder viewHolder = new MovieViewHolder(view);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +76,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder{
-        ImageView posterImageView;
+        final ImageView posterImageView;
 
         public MovieViewHolder(View itemView) {
             super(itemView);

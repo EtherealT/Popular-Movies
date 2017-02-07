@@ -3,8 +3,5 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
 /build
-/captures
-.externalNativeBuild
 /app/src/main/java/com/tobiadeyinka/popularmovies/config/Values.java
