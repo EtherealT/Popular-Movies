@@ -1,5 +1,6 @@
 package com.tobiadeyinka.popularmovies.entities;
 
+import android.database.Cursor;
 import android.view.View;
 import android.widget.Toast;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  * @author Tobi Adeyinka
  */
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder>{
+public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder>{
 
     private final List<Movie> data;
     private Context context;
