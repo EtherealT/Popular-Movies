@@ -5,4 +5,5 @@
     <string name="highest_rating">Highest rating</string>
     <string name="runtime">%1$s mins</string>
     <string name="vote_average">%1$s/10</string>
+    <string name="add_favorite">Add to favorites</string>
 </resources>
