@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity{
         if (movies.size() == 0)
             Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
 
+        moviesTable.close();
         return true;
     }
 

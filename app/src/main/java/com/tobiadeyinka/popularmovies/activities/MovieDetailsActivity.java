@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
+import com.tobiadeyinka.popularmovies.database.MoviesTable;
+import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
 
 import org.json.JSONObject;
@@ -26,11 +28,13 @@ import java.io.IOException;
 public class MovieDetailsActivity extends AppCompatActivity {
 
     int movieId;
+    MoviesTable moviesTable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_movie_details);
+        moviesTable = new MoviesTable(getApplicationContext());
 
         Intent intent = getIntent();
         movieId = intent.getIntExtra("id", 0);
@@ -54,9 +58,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             try {
                 JSONObject object = new JSONObject(s);
-                String title = object.getString("title");
+                final String title = object.getString("title");
                 String releaseDate = object.getString("release_date");
-                String moviePoster = object.getString("poster_path");
+                final String moviePoster = object.getString("poster_path");
                 String voteAverage = object.getString("vote_average");
                 String plotSynopsis = object.getString("overview");
                 String runtime = object.getString("runtime");
@@ -79,13 +83,25 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 TextView synopsisTextView = (TextView)findViewById(R.id.synopsis_text_view);
                 synopsisTextView.setText(plotSynopsis);
 
-                Button addFavoritesButton = (Button)findViewById(R.id.add_favorite_btn);
-                addFavoritesButton.setText(getFavoritesButtonText());
-                addFavoritesButton.setVisibility(View.VISIBLE);
-                addFavoritesButton.setOnClickListener(new View.OnClickListener() {
+                final Button favoritesButton = (Button)findViewById(R.id.add_favorite_btn);
+                favoritesButton.setText(getFavoritesButtonText(movieId));
+                favoritesButton.setVisibility(View.VISIBLE);
+                favoritesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
+                        /*
+                         * if the text on the button indicates adding as favorite,
+                         * save the movie as favorite.
+                         */
+                        if(favoritesButton.getText().equals(getString(R.string.add_favorite))){
+                            Movie movie = new Movie(movieId, title, moviePoster);
+                            moviesTable.save(movie);
+                            favoritesButton.setText(getString(R.string.remove_favorite));
+                        }
+                        else{
+                            moviesTable.delete(movieId);
+                            favoritesButton.setText(getString(R.string.add_favorite));
+                        }
                     }
                 });
 
@@ -95,8 +111,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
     }
 
-    private String getFavoritesButtonText(){
+    private String getFavoritesButtonText(int movieId){
+        if(moviesTable.contains(movieId)) return getString(R.string.remove_favorite);
         return getString(R.string.add_favorite);
+    }
+
+    @Override
+    protected void onStop() {
+        moviesTable.close();
+        super.onStop();
     }
 
 }

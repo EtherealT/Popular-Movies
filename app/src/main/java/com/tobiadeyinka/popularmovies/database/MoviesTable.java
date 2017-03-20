@@ -34,6 +34,11 @@ public class MoviesTable {
         database.delete(ConfigValues.MOVIES_TABLE, ConfigValues.ID + " = " + movieId, null);
     }
 
+    public boolean contains(long movieId){
+        Cursor cursor = database.rawQuery("SELECT * FROM " + ConfigValues.MOVIES_TABLE + " WHERE " + ConfigValues.ID + " = " + movieId, null);
+        return cursor.getCount() != 0;
+    }
+
     public List<Movie> getAll(){
         List<Movie> movies = new ArrayList<Movie>();
         Cursor cursor = database.query(ConfigValues.MOVIES_TABLE, ConfigValues.MOVIES_TABLE_COLUMNS, null, null, null, null, null);
