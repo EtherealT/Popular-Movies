@@ -53,11 +53,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
                 Movie movie = data.get(position);
                 intent.putExtra("id", movie.getId());
-                intent.putExtra("title", movie.getTitle());
-                intent.putExtra("releaseDate", movie.getReleaseDate());
-                intent.putExtra("poster", movie.getMoviePoster());
-                intent.putExtra("voteAverage", movie.getVoteAverage());
-                intent.putExtra("plotSynopsis", movie.getPlotSynopsis());
                 context.startActivity(intent);
             }
         });
@@ -75,6 +70,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return data.size();
     }
 
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     class MovieViewHolder extends RecyclerView.ViewHolder{
         final ImageView posterImageView;
 
@@ -87,12 +88,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Movie movie = data.get(listIndex);
             Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster()).into(posterImageView);
         }
-    }
-
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

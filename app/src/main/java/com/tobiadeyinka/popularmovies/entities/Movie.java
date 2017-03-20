@@ -13,6 +13,13 @@ public class Movie {
     private final String voteAverage;
     private final String plotSynopsis;
 
+    public Movie(int id, String title, String moviePoster){
+        this.id = id;
+        this.title = title;
+        this.moviePoster = moviePoster;
+        releaseDate = voteAverage = plotSynopsis = "";
+    }
+
     public Movie(int id, String title, String releaseDate, String moviePoster, String voteAverage, String plotSynopsis) {
         this.id = id;
         this.title = title;

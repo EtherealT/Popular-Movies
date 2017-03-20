@@ -3,6 +3,8 @@ package com.tobiadeyinka.popularmovies.activities;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.content.Intent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.support.annotation.Nullable;
@@ -23,14 +25,16 @@ import java.io.IOException;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
+    int movieId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_movie_details);
 
         Intent intent = getIntent();
-        int id = intent.getIntExtra("id", 0);
-        new QueryTask().execute(id);
+        movieId = intent.getIntExtra("id", 0);
+        new QueryTask().execute(movieId);
     }
 
     private class QueryTask extends AsyncTask<Integer, Void, String>{
@@ -75,10 +79,24 @@ public class MovieDetailsActivity extends AppCompatActivity {
                 TextView synopsisTextView = (TextView)findViewById(R.id.synopsis_text_view);
                 synopsisTextView.setText(plotSynopsis);
 
+                Button addFavoritesButton = (Button)findViewById(R.id.add_favorite_btn);
+                addFavoritesButton.setText(getFavoritesButtonText());
+                addFavoritesButton.setVisibility(View.VISIBLE);
+                addFavoritesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getFavoritesButtonText(){
+        return getString(R.string.add_favorite);
     }
 
 }

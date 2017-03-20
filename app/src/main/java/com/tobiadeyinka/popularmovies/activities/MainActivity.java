@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.tobiadeyinka.popularmovies.R;
+import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
 import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tobi Adeyinka
@@ -64,12 +66,10 @@ public class MainActivity extends AppCompatActivity{
         super.onOptionsItemSelected(item);
 
         switch (item.getItemId()) {
-            case R.id.popularity:
-                return sortByPopularity();
-            case R.id.rating:
-                return sortByRating();
-            default:
-                return false;
+            case R.id.popularity: return sortByPopularity();
+            case R.id.rating: return sortByRating();
+            case R.id.favorites: return displayFavorites();
+            default: return false;
         }
     }
 
@@ -89,14 +89,30 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
+    /*
+     * Display locally saved favorites
+     */
+    private boolean displayFavorites(){
+        MoviesTable moviesTable = new MoviesTable(getApplicationContext());
+        List<Movie> movies = moviesTable.getAll();
+
+        data.clear();
+        data.addAll(movies);
+        movieAdapter.notifyDataSetChanged();
+
+        if (movies.size() == 0)
+            Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
+
+        return true;
+    }
+
     private class MovieQueryTask extends AsyncTask<QueryType, Void, String> {
 
         @Override
         protected String doInBackground(QueryType... queryTypes) {
             QueryType queryType = queryTypes[0];
 
-            if(!isOnline())
-                return null;
+            if(!isOnline()) return null;
 
             switch (queryType){
                 case POPULAR:
@@ -113,8 +129,7 @@ public class MainActivity extends AppCompatActivity{
                         e.printStackTrace();
                     }
 
-                default:
-                    return null;
+                default: return null;
             }
         }
 
@@ -141,8 +156,9 @@ public class MainActivity extends AppCompatActivity{
                     String voteAverage = tmp.getString("vote_average");
                     String plotSynopsis = tmp.getString("overview");
                     data.add(new Movie(id, title, releaseDate, moviePoster, voteAverage, plotSynopsis));
-                    movieAdapter.notifyDataSetChanged();
                 }
+
+                movieAdapter.notifyDataSetChanged();
 
             } catch (JSONException e) {
                 e.printStackTrace();
