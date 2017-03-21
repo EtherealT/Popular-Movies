@@ -1,12 +1,12 @@
 package com.tobiadeyinka.popularmovies.entities;
 
-import android.database.Cursor;
 import android.view.View;
 import android.widget.Toast;
 import android.view.ViewGroup;
 import android.content.Intent;
 import android.content.Context;
 import android.net.NetworkInfo;
+import android.database.Cursor;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.net.ConnectivityManager;
@@ -22,8 +22,8 @@ import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
 public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder>{
 
-    private Context context;
     private Cursor cursor;
+    private Context context;
 
     public MovieAdapter(Context context, Cursor cursor) {
         super(context, cursor);
@@ -89,7 +89,5 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
             Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster()).into(posterImageView);
         }
     }
-
-
 
 }

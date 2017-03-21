@@ -1,28 +1,25 @@
 package com.tobiadeyinka.popularmovies.networking;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
+import android.widget.*;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.app.Activity;
+import android.os.AsyncTask;
+import android.content.Context;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
-import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.entities.Movie;
+import com.tobiadeyinka.popularmovies.database.MoviesTable;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.IOException;
 
 public class MovieDetailsQueryTask extends AsyncTask<Integer, Void, String>{
 
-    private Context context;
     private int movieId;
-
+    private Context context;
     private MoviesTable moviesTable;
 
     public MovieDetailsQueryTask(Context context){
@@ -98,8 +95,6 @@ public class MovieDetailsQueryTask extends AsyncTask<Integer, Void, String>{
                     }
                 }
             });
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();
