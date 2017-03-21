@@ -17,6 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.*;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
+import com.tobiadeyinka.popularmovies.utilities.MovieAdapter;
 import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
 
 /**

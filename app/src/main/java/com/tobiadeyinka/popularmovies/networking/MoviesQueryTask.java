@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.tobiadeyinka.popularmovies.entities.QueryType;
 import com.tobiadeyinka.popularmovies.database.ConfigValues;
-import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
+import com.tobiadeyinka.popularmovies.utilities.MovieAdapter;
 
 import org.json.*;
 import java.io.IOException;

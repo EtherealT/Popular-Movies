@@ -1,4 +1,4 @@
-package com.tobiadeyinka.popularmovies.entities;
+package com.tobiadeyinka.popularmovies.utilities;
 
 import android.content.Context;
 import android.database.Cursor;

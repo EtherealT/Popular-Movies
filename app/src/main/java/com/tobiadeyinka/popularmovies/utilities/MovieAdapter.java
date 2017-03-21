@@ -1,4 +1,4 @@
-package com.tobiadeyinka.popularmovies.entities;
+package com.tobiadeyinka.popularmovies.utilities;
 
 import android.view.View;
 import android.widget.Toast;
@@ -14,13 +14,14 @@ import android.support.v7.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
+import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
 /**
  * @author Tobi Adeyinka
  */
 
-public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder>{
+public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder> {
 
     private Cursor cursor;
     private Context context;
