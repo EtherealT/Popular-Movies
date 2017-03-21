@@ -1,26 +1,20 @@
 package com.tobiadeyinka.popularmovies.networking;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
+import android.content.Context;
 import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.view.LayoutInflater;
 
 import com.tobiadeyinka.popularmovies.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.json.*;
 import java.io.IOException;
 
 public class ReviewsQueryTask extends AsyncTask<Integer, Void, String> {
 
-    private LinearLayout reviewsSection;
     private Context context;
+    private LinearLayout reviewsSection;
 
     public ReviewsQueryTask(LinearLayout reviewsSection, Context context){
         this.reviewsSection = reviewsSection;

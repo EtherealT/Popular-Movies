@@ -1,22 +1,18 @@
 package com.tobiadeyinka.popularmovies.networking;
 
+import android.widget.Toast;
+import android.os.AsyncTask;
+import android.net.NetworkInfo;
 import android.content.Context;
 import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
-import com.tobiadeyinka.popularmovies.database.ConfigValues;
-import com.tobiadeyinka.popularmovies.entities.MainActivityStatus;
-import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
+import com.tobiadeyinka.popularmovies.database.ConfigValues;
+import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import org.json.*;
 import java.io.IOException;
 
 public class MoviesQueryTask extends AsyncTask<QueryType, Void, String>{
