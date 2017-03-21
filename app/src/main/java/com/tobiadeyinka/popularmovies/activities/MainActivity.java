@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.database.ConfigValues;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
+import com.tobiadeyinka.popularmovies.entities.MainActivityStatus;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
 import com.tobiadeyinka.popularmovies.networking.MovieQueries;
 import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity{
 
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
+    private MainActivityStatus status;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity{
 
         movieAdapter = new MovieAdapter(getApplicationContext(), null);
         recyclerView.setAdapter(movieAdapter);
+
+        status = MainActivityStatus.NORMAL;
     }
 
     @Override
@@ -102,6 +106,7 @@ public class MainActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
 
         moviesTable.close();
+        status = MainActivityStatus.FAVORITES;
         return true;
     }
 
@@ -130,6 +135,7 @@ public class MainActivity extends AppCompatActivity{
 
                 default: return null;
             }
+
         }
 
         @Override
@@ -168,6 +174,8 @@ public class MainActivity extends AppCompatActivity{
                 movieAdapter = new MovieAdapter(getApplicationContext(), matrixCursor);
                 recyclerView.setAdapter(movieAdapter);
 
+                status = MainActivityStatus.NORMAL;
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -183,6 +191,7 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onResume() {
+        if (status == MainActivityStatus.FAVORITES) displayFavorites();
         super.onResume();
     }
 }
