@@ -1,20 +1,17 @@
 package com.tobiadeyinka.popularmovies.database;
 
+import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.tobiadeyinka.popularmovies.entities.Movie;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MoviesTable {
 
     private Context context;
-    private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
+    private DatabaseHelper databaseHelper;
 
     public MoviesTable(Context context){
         this.context = context;
