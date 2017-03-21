@@ -17,13 +17,13 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class TrailersQueryTask extends AsyncTask<Integer, Void, String> {
+public class ReviewsQueryTask extends AsyncTask<Integer, Void, String> {
 
-    private LinearLayout trailersSection;
+    private LinearLayout reviewsSection;
     private Context context;
 
-    public TrailersQueryTask(LinearLayout trailersSection, Context context){
-        this.trailersSection = trailersSection;
+    public ReviewsQueryTask(LinearLayout reviewsSection, Context context){
+        this.reviewsSection = reviewsSection;
         this.context = context;
     }
 
@@ -35,7 +35,7 @@ public class TrailersQueryTask extends AsyncTask<Integer, Void, String> {
     protected String doInBackground(Integer... integers) {
         int id = integers[0];
         try {
-            return MovieQueries.getMovieVideos(id);
+            return MovieQueries.getMovieReviews(id);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class TrailersQueryTask extends AsyncTask<Integer, Void, String> {
 
             for(int i = 0; i < len; i++){
                 tmp = results.getJSONObject(i);
-                appendTrailer(tmp);
+                appendReview(tmp);
             }
 
         }catch (JSONException e) {
@@ -60,31 +60,24 @@ public class TrailersQueryTask extends AsyncTask<Integer, Void, String> {
         }
     }
 
-    private void appendTrailer(JSONObject trailer){
+    private void appendReview(JSONObject review){
         try {
-            String name = trailer.getString("name");
-            final String key = trailer.getString("key");
+            String author = review.getString("author");
+            String content = review.getString("content");
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LinearLayout l = (LinearLayout) inflater.inflate(R.layout.trailers_list_item, null);
+            LinearLayout l = (LinearLayout) inflater.inflate(R.layout.reviews_list_item, null);
 
-            TextView tv = (TextView) l.findViewById(R.id.trailer_text);
-            tv.setText(context.getString(R.string.trailer, name));
+            TextView tv1 = (TextView) l.findViewById(R.id.reviewer_name);
+            tv1.setText(context.getString(R.string.reviewer, author));
 
-            l.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + key));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                }
-            });
+            TextView tv2 = (TextView) l.findViewById(R.id.review);
+            tv2.setText(context.getString(R.string.review, content));
 
-            trailersSection.addView(l);
+            reviewsSection.addView(l);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 }

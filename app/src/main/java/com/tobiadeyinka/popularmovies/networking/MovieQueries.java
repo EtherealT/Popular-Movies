@@ -65,6 +65,18 @@ public class MovieQueries {
         return null;
     }
 
+    public static String getMovieReviews(int movieId) throws IOException{
+        URL url;
+        try{
+            url = new URL(BASE_URL + movieId + "/reviews" + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US&page=1");
+            return query(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     private static String query(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 

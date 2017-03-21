@@ -16,6 +16,7 @@ import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.networking.MovieQueries;
+import com.tobiadeyinka.popularmovies.networking.ReviewsQueryTask;
 import com.tobiadeyinka.popularmovies.networking.TrailersQueryTask;
 
 import org.json.JSONObject;
@@ -32,12 +33,14 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private int movieId;
     private MoviesTable moviesTable;
     private LinearLayout trailerSection;
+    private LinearLayout reviewsSection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_movie_details);
         trailerSection = (LinearLayout) findViewById(R.id.trailer_linear_layout);
+        reviewsSection = (LinearLayout)findViewById(R.id.review_linear_layout);
         moviesTable = new MoviesTable(getApplicationContext());
 
         Intent intent = getIntent();
@@ -109,7 +112,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-                new TrailersQueryTask(movieId, trailerSection, getApplicationContext());
+                TrailersQueryTask trailersQueryTask = new TrailersQueryTask(trailerSection, getApplicationContext());
+                trailersQueryTask.query(movieId);
+
+                ReviewsQueryTask reviewsQueryTask = new ReviewsQueryTask(reviewsSection, getApplicationContext());
+                reviewsQueryTask.query(movieId);
 
             } catch (JSONException e) {
                 e.printStackTrace();
