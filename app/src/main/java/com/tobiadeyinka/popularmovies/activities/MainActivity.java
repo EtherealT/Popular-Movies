@@ -1,14 +1,12 @@
 package com.tobiadeyinka.popularmovies.activities;
 
 import android.os.Bundle;
-import android.os.AsyncTask;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.database.Cursor;
 import android.net.NetworkInfo;
 import android.content.Context;
 import android.view.MenuInflater;
-import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
 
 import android.support.annotation.Nullable;
@@ -19,12 +17,7 @@ import android.support.v7.widget.GridLayoutManager;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.*;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
-import com.tobiadeyinka.popularmovies.database.ConfigValues;
-import com.tobiadeyinka.popularmovies.networking.MovieQueries;
 import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
-
-import org.json.*;
-import java.io.IOException;
 
 /**
  * @author Tobi Adeyinka
@@ -71,6 +64,18 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected void onResume() {
+        if (status == MainActivityStatus.FAVORITES) displayFavorites();
+        super.onResume();
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     /*
      * Sort movies by popularity
      */
@@ -107,20 +112,6 @@ public class MainActivity extends AppCompatActivity{
         moviesTable.close();
         status = MainActivityStatus.FAVORITES;
         return true;
-    }
-
-
-    @Override
-    protected void onResume() {
-        if (status == MainActivityStatus.FAVORITES) displayFavorites();
-        super.onResume();
-    }
-
-
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }
