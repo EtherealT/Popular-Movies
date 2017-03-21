@@ -1,20 +1,20 @@
 package com.tobiadeyinka.popularmovies.activities;
 
 import android.os.Bundle;
-import android.os.AsyncTask;
-import android.content.Intent;
 import android.view.View;
+import android.os.AsyncTask;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.content.Intent;
 import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
-import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.entities.Movie;
+import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.networking.MovieQueries;
 import com.tobiadeyinka.popularmovies.networking.ReviewsQueryTask;
 import com.tobiadeyinka.popularmovies.networking.TrailersQueryTask;
@@ -39,6 +39,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_movie_details);
+
         trailerSection = (LinearLayout) findViewById(R.id.trailer_linear_layout);
         reviewsSection = (LinearLayout)findViewById(R.id.review_linear_layout);
         moviesTable = new MoviesTable(getApplicationContext());
