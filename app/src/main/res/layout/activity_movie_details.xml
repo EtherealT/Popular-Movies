@@ -86,6 +86,25 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
 
+        <LinearLayout
+            android:id="@+id/trailer_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/trailers"
+                android:textColor="@color/gray2"
+                android:padding="5dp"
+                android:textStyle="bold"
+                android:textSize="35sp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

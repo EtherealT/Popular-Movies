@@ -1,5 +1,7 @@
 package com.tobiadeyinka.popularmovies.activities;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -14,10 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 
 import com.tobiadeyinka.popularmovies.R;
+import com.tobiadeyinka.popularmovies.database.ConfigValues;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
-import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
-import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
+import com.tobiadeyinka.popularmovies.networking.MovieQueries;
 import com.tobiadeyinka.popularmovies.entities.MovieAdapter;
 
 import org.json.JSONArray;
@@ -25,8 +27,6 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tobi Adeyinka
@@ -34,22 +34,21 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity{
 
-    private ArrayList<Movie> data;
     private MovieAdapter movieAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
-        data = new ArrayList<>();
         new MovieQueryTask().execute(QueryType.POPULAR);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
+        recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
         RecyclerView.LayoutManager layoutManager;
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        movieAdapter = new MovieAdapter(data);
+        movieAdapter = new MovieAdapter(getApplicationContext(), null);
         recyclerView.setAdapter(movieAdapter);
     }
 
@@ -94,13 +93,12 @@ public class MainActivity extends AppCompatActivity{
      */
     private boolean displayFavorites(){
         MoviesTable moviesTable = new MoviesTable(getApplicationContext());
-        List<Movie> movies = moviesTable.getAll();
+        Cursor moviesCursor = moviesTable.getAll();
 
-        data.clear();
-        data.addAll(movies);
-        movieAdapter.notifyDataSetChanged();
+        movieAdapter = new MovieAdapter(getApplicationContext(), moviesCursor);
+        recyclerView.setAdapter(movieAdapter);
 
-        if (movies.size() == 0)
+        if (moviesCursor.getCount() == 0)
             Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
 
         moviesTable.close();
@@ -118,14 +116,14 @@ public class MainActivity extends AppCompatActivity{
             switch (queryType){
                 case POPULAR:
                     try {
-                        return MovieQuery.getPopularMovies();
+                        return MovieQueries.getPopularMovies();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
 
                 case TOP_RATED:
                     try {
-                        return MovieQuery.getTopRatedMovies();
+                        return MovieQueries.getTopRatedMovies();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -145,21 +143,30 @@ public class MainActivity extends AppCompatActivity{
                 JSONObject object = new JSONObject(s);
                 JSONArray results = object.getJSONArray("results");
                 int len = results.length();
-                data.clear();
                 JSONObject tmp;
+
+                MatrixCursor matrixCursor = new MatrixCursor(new String[] {
+                        ConfigValues.ID,
+                        ConfigValues.TITLE,
+                        ConfigValues.RELEASE_DATE,
+                        ConfigValues.POSTER_PATH,
+                        ConfigValues.VOTE_AVERAGE,
+                        ConfigValues.OVERVIEW
+                });
 
                 for(int i = 0; i < len; i++){
                     tmp = results.getJSONObject(i);
-                    int id = tmp.getInt("id");
-                    String title = tmp.getString("title");
-                    String releaseDate = tmp.getString("release_date");
-                    String moviePoster = tmp.getString("poster_path");
-                    String voteAverage = tmp.getString("vote_average");
-                    String plotSynopsis = tmp.getString("overview");
-                    data.add(new Movie(id, title, releaseDate, moviePoster, voteAverage, plotSynopsis));
+                    int id = tmp.getInt(ConfigValues.ID);
+                    String title = tmp.getString(ConfigValues.TITLE);
+                    String releaseDate = tmp.getString(ConfigValues.RELEASE_DATE);
+                    String posterPath = tmp.getString(ConfigValues.POSTER_PATH);
+                    String voteAverage = tmp.getString(ConfigValues.VOTE_AVERAGE);
+                    String overview = tmp.getString(ConfigValues.OVERVIEW);
+                    matrixCursor.addRow(new Object[]{id, title,releaseDate, posterPath, voteAverage, overview});
                 }
 
-                movieAdapter.notifyDataSetChanged();
+                movieAdapter = new MovieAdapter(getApplicationContext(), matrixCursor);
+                recyclerView.setAdapter(movieAdapter);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -174,4 +181,8 @@ public class MainActivity extends AppCompatActivity{
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }

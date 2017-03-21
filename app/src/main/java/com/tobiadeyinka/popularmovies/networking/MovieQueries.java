@@ -1,4 +1,4 @@
-package com.tobiadeyinka.popularmovies.utilities;
+package com.tobiadeyinka.popularmovies.networking;
 
 import com.tobiadeyinka.popularmovies.config.Values;
 
@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
  * @author Tobi Adeyinka
  */
 
-public class MovieQuery {
+public class MovieQueries {
 
     private static final String BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String POPULAR_MOVIES_QUERY = "popular?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US&page=1";
@@ -44,7 +44,19 @@ public class MovieQuery {
     public static String getMovieDetails(int movieId) throws IOException {
         URL url;
         try {
-            url = new URL("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US");
+            url = new URL(BASE_URL + movieId + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US");
+            return query(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static String getMovieVideos(int movieId) throws IOException{
+        URL url;
+        try{
+            url = new URL(BASE_URL + movieId + "/videos" + "?api_key=" + Values.MOVIE_DB_API_KEY + "&language=en-US");
             return query(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();

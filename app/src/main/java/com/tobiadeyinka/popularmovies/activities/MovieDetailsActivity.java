@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.support.annotation.Nullable;
@@ -14,7 +15,8 @@ import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.entities.Movie;
-import com.tobiadeyinka.popularmovies.utilities.MovieQuery;
+import com.tobiadeyinka.popularmovies.networking.MovieQueries;
+import com.tobiadeyinka.popularmovies.networking.TrailersQueryTask;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -27,13 +29,15 @@ import java.io.IOException;
 
 public class MovieDetailsActivity extends AppCompatActivity {
 
-    int movieId;
-    MoviesTable moviesTable;
+    private int movieId;
+    private MoviesTable moviesTable;
+    private LinearLayout trailerSection;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_movie_details);
+        trailerSection = (LinearLayout) findViewById(R.id.trailer_linear_layout);
         moviesTable = new MoviesTable(getApplicationContext());
 
         Intent intent = getIntent();
@@ -47,7 +51,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
         protected String doInBackground(Integer... integers) {
             int id = integers[0];
             try {
-                return MovieQuery.getMovieDetails(id);
+                return MovieQueries.getMovieDetails(id);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -59,10 +63,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 final String title = object.getString("title");
-                String releaseDate = object.getString("release_date");
+                final String releaseDate = object.getString("release_date");
                 final String moviePoster = object.getString("poster_path");
-                String voteAverage = object.getString("vote_average");
-                String plotSynopsis = object.getString("overview");
+                final String voteAverage = object.getString("vote_average");
+                final String plotSynopsis = object.getString("overview");
                 String runtime = object.getString("runtime");
 
                 TextView titleTextView = (TextView)findViewById(R.id.tv_movie_title);
@@ -94,7 +98,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
                          * save the movie as favorite.
                          */
                         if(favoritesButton.getText().equals(getString(R.string.add_favorite))){
-                            Movie movie = new Movie(movieId, title, moviePoster);
+                            Movie movie = new Movie(movieId, title, releaseDate, moviePoster, voteAverage, plotSynopsis);
                             moviesTable.save(movie);
                             favoritesButton.setText(getString(R.string.remove_favorite));
                         }
@@ -104,6 +108,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                new TrailersQueryTask(movieId, trailerSection, getApplicationContext());
 
             } catch (JSONException e) {
                 e.printStackTrace();

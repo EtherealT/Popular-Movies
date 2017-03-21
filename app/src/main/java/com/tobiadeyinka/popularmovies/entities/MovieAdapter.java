@@ -16,20 +16,18 @@ import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * @author Tobi Adeyinka
  */
 
 public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder>{
 
-    private final List<Movie> data;
     private Context context;
+    private Cursor cursor;
 
-    public MovieAdapter(ArrayList<Movie> data) {
-       this.data = data;
+    public MovieAdapter(Context context, Cursor cursor) {
+        super(context, cursor);
+        this.cursor = cursor;
     }
 
     @Override
@@ -52,7 +50,8 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
                 int position = viewHolder.getAdapterPosition();
                 Intent intent = new Intent(context, MovieDetailsActivity.class);
 
-                Movie movie = data.get(position);
+                cursor.moveToPosition(position);
+                Movie movie = Movie.fromCursor(cursor);
                 intent.putExtra("id", movie.getId());
                 context.startActivity(intent);
             }
@@ -62,13 +61,13 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder holder, int position) {
-        holder.bind(position);
+    public int getItemCount() {
+        return cursor != null ? cursor.getCount() : 0;
     }
 
     @Override
-    public int getItemCount() {
-        return data.size();
+    public void onBindViewHolder(MovieViewHolder viewHolder, Cursor cursor) {
+        viewHolder.bind(cursor);
     }
 
     private boolean isOnline() {
@@ -85,10 +84,12 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
             posterImageView = (ImageView)itemView.findViewById(R.id.movie_item_image);
         }
 
-        void bind(int listIndex) {
-            Movie movie = data.get(listIndex);
+        void bind(Cursor cursor) {
+            Movie movie = Movie.fromCursor(cursor);
             Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster()).into(posterImageView);
         }
     }
+
+
 
 }

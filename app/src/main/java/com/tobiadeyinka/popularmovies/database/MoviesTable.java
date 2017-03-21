@@ -26,7 +26,10 @@ public class MoviesTable {
         ContentValues cv = new ContentValues();
         cv.put(ConfigValues.ID, movie.getId());
         cv.put(ConfigValues.TITLE, movie.getTitle());
-        cv.put(ConfigValues.POSTER, movie.getMoviePoster());
+        cv.put(ConfigValues.POSTER_PATH, movie.getMoviePoster());
+        cv.put(ConfigValues.RELEASE_DATE, movie.getReleaseDate());
+        cv.put(ConfigValues.VOTE_AVERAGE, movie.getVoteAverage());
+        cv.put(ConfigValues.OVERVIEW, movie.getPlotSynopsis());
         return database.insert(ConfigValues.MOVIES_TABLE, null, cv);
     }
 
@@ -39,23 +42,9 @@ public class MoviesTable {
         return cursor.getCount() != 0;
     }
 
-    public List<Movie> getAll(){
-        List<Movie> movies = new ArrayList<Movie>();
+    public Cursor getAll(){
         Cursor cursor = database.query(ConfigValues.MOVIES_TABLE, ConfigValues.MOVIES_TABLE_COLUMNS, null, null, null, null, null);
-
-        int idColumnIndex = cursor.getColumnIndex(ConfigValues.ID);
-        int titleColumnIndex = cursor.getColumnIndex(ConfigValues.TITLE);
-        int posterColumnIndex = cursor.getColumnIndex(ConfigValues.POSTER);
-
-        for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
-            int movieId = cursor.getInt(idColumnIndex);
-            String movieTitle = cursor.getString(titleColumnIndex);
-            String moviePoster = cursor.getString(posterColumnIndex);
-            Movie movie = new Movie(movieId, movieTitle, moviePoster);
-            movies.add(movie);
-        }
-
-        return movies;
+        return cursor;
     }
 
     public void close(){

@@ -15,7 +15,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         database.execSQL("CREATE TABLE " + ConfigValues.MOVIES_TABLE + " (" +
                 ConfigValues.ID + " TEXT PRIMARY KEY NOT NULL, " +
                 ConfigValues.TITLE + " TEXT NOT NULL, " +
-                ConfigValues.POSTER + " TEXT NOT NULL) "
+                ConfigValues.RELEASE_DATE + " TEXT NOT NULL, " +
+                ConfigValues.VOTE_AVERAGE + " TEXT NOT NULL, " +
+                ConfigValues.OVERVIEW + " TEXT NOT NULL, " +
+                ConfigValues.POSTER_PATH + " TEXT NOT NULL) "
         );
     }
 
