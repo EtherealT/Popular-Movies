@@ -1,6 +1,7 @@
 package com.tobiadeyinka.popularmovies.activities;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.database.Cursor;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
  */
 
 public class MainActivity extends AppCompatActivity{
+
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private  Bundle bundleRecyclerViewState;
 
     private ArrayList<Movie> data;
     private MovieAdapter movieAdapter;
@@ -69,10 +73,18 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
+        bundleRecyclerViewState = new Bundle();
+        Parcelable listState = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+
     }
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
+        if (bundleRecyclerViewState != null) {
+            Parcelable listState = bundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
+        }
     }
 
     @Override
@@ -93,16 +105,7 @@ public class MainActivity extends AppCompatActivity{
      */
     private boolean displayFavorites(){
         Cursor moviesCursor = getApplicationContext().getContentResolver().query(MoviesProvider.getCONTENT_URI(), null, null, null, null);
-        data.clear();
-
-        try {
-            while (moviesCursor.moveToNext()) {
-                data.add(Movie.fromCursor(moviesCursor));
-            }
-        } finally {
-            moviesCursor.close();
-        }
-
+        getDataFromCursor(moviesCursor);
         movieAdapter.notifyDataSetChanged();
 
         if (moviesCursor.getCount() == 0)
@@ -110,6 +113,17 @@ public class MainActivity extends AppCompatActivity{
 
         status = MainActivityStatus.FAVORITES;
         return true;
+    }
+
+    private void getDataFromCursor(Cursor c){
+        data.clear();
+
+        try {
+            while (c.moveToNext())
+                data.add(Movie.fromCursor(c));
+        }finally {
+            c.close();
+        }
     }
 
 }
