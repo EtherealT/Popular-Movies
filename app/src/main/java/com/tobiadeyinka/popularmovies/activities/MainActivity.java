@@ -1,7 +1,6 @@
 package com.tobiadeyinka.popularmovies.activities;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.database.Cursor;
@@ -24,13 +23,10 @@ import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
 
 public class MainActivity extends AppCompatActivity{
 
-    private final String LIST_STATE_KEY = "LIST_STATE";
-
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
     private MainActivityStatus status;
     private RecyclerView.LayoutManager layoutManager;
-    private Bundle listState;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,17 +65,10 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
-        listState = new Bundle();
-        Parcelable listStateParcelable = layoutManager.onSaveInstanceState();
-        listState.putParcelable(LIST_STATE_KEY, listStateParcelable);
     }
 
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
-        if (listState != null) {
-            Parcelable listStateParcelable = listState.getParcelable(LIST_STATE_KEY);
-            layoutManager.onRestoreInstanceState(listStateParcelable);
-        }
     }
 
     @Override
@@ -91,7 +80,7 @@ public class MainActivity extends AppCompatActivity{
     private boolean sortMovies(QueryType type){
         MoviesQueryTask m = new MoviesQueryTask(getApplicationContext(), movieAdapter, recyclerView);
         m.query(type);
-        status = MainActivityStatus.NORMAL;
+        status = ( type == QueryType.POPULAR) ? MainActivityStatus.POPULAR : MainActivityStatus.RATING;
         return true;
     }
 

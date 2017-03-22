@@ -62,6 +62,12 @@ public class MoviesProvider extends ContentProvider {
         return CONTENT_URI;
     }
 
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        moviesTable.close();
+    }
+
     public static Uri generateUri(long id){
         Uri uri = Uri.parse(CONTENT_URI.toString() + "/" + String.valueOf(id));
         return uri;
