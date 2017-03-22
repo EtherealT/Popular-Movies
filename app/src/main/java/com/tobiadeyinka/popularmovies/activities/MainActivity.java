@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.database.Cursor;
-import android.net.NetworkInfo;
-import android.content.Context;
 import android.view.MenuInflater;
-import android.net.ConnectivityManager;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +13,8 @@ import android.support.v7.widget.GridLayoutManager;
 
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.*;
-import com.tobiadeyinka.popularmovies.database.MoviesTable;
 import com.tobiadeyinka.popularmovies.utilities.MovieAdapter;
+import com.tobiadeyinka.popularmovies.utilities.MoviesProvider;
 import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
 
 /**
@@ -71,12 +68,6 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
     }
 
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
     /*
      * Sort movies by popularity
      */
@@ -101,8 +92,7 @@ public class MainActivity extends AppCompatActivity{
      * Display locally saved favorites
      */
     private boolean displayFavorites(){
-        MoviesTable moviesTable = new MoviesTable(getApplicationContext());
-        Cursor moviesCursor = moviesTable.getAll();
+        Cursor moviesCursor = getApplicationContext().getContentResolver().query(MoviesProvider.getCONTENT_URI(), null, null, null, null);
 
         movieAdapter = new MovieAdapter(getApplicationContext(), moviesCursor);
         recyclerView.setAdapter(movieAdapter);
@@ -110,7 +100,6 @@ public class MainActivity extends AppCompatActivity{
         if (moviesCursor.getCount() == 0)
             Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
 
-        moviesTable.close();
         status = MainActivityStatus.FAVORITES;
         return true;
     }

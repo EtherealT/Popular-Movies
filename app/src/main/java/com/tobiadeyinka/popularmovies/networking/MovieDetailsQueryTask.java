@@ -10,6 +10,7 @@ import com.squareup.picasso.Picasso;
 import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.database.MoviesTable;
+import com.tobiadeyinka.popularmovies.utilities.MoviesProvider;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -20,11 +21,9 @@ public class MovieDetailsQueryTask extends AsyncTask<Integer, Void, String>{
 
     private int movieId;
     private Context context;
-    private MoviesTable moviesTable;
 
     public MovieDetailsQueryTask(Context context){
         this.context = context;
-        moviesTable = new MoviesTable(context);
     }
 
     public void query(int movieId){
@@ -78,19 +77,18 @@ public class MovieDetailsQueryTask extends AsyncTask<Integer, Void, String>{
             favoritesButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                        /*
-                         * if the text on the button indicates adding as favorite,
-                         * save the movie as favorite.
-                         */
-                    moviesTable = new MoviesTable(context);
+                    /*
+                     * if the text on the button indicates adding as favorite,
+                     * save the movie as favorite.
+                     */
 
                     if(favoritesButton.getText().equals(context.getString(R.string.add_favorite))){
                         Movie movie = new Movie(movieId, title, releaseDate, moviePoster, voteAverage, plotSynopsis);
-                        moviesTable.save(movie);
+                        context.getContentResolver().insert(MoviesProvider.getCONTENT_URI(), Movie.toContentValues(movie));
                         favoritesButton.setText(context.getString(R.string.remove_favorite));
                     }
                     else{
-                        moviesTable.delete(movieId);
+                        context.getContentResolver().delete(MoviesProvider.generateUri(movieId), null, null);
                         favoritesButton.setText(context.getString(R.string.add_favorite));
                     }
                 }
@@ -98,12 +96,11 @@ public class MovieDetailsQueryTask extends AsyncTask<Integer, Void, String>{
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }finally {
-            moviesTable.close();
         }
     }
 
     private String getFavoritesButtonText(int movieId){
+        MoviesTable moviesTable = new MoviesTable(context);
         if(moviesTable.contains(movieId)) return context.getString(R.string.remove_favorite);
         return context.getString(R.string.add_favorite);
     }

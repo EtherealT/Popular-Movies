@@ -1,5 +1,6 @@
 package com.tobiadeyinka.popularmovies.entities;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.tobiadeyinka.popularmovies.database.ConfigValues;
@@ -42,6 +43,28 @@ public class Movie {
         String plotSynopsis = cursor.getString(synopsisColumnIndex);
 
         return new Movie(id, title, releaseDate, moviePoster, voteAverage, plotSynopsis);
+    }
+
+    public static Movie fromContentValues(ContentValues cv){
+        int id = cv.getAsInteger(ConfigValues.ID);
+        String title = cv.getAsString(ConfigValues.TITLE);
+        String releaseDate = cv.getAsString(ConfigValues.RELEASE_DATE);
+        String moviePoster = cv.getAsString(ConfigValues.POSTER_PATH);
+        String voteAverage = cv.getAsString(ConfigValues.VOTE_AVERAGE);
+        String plotSynopsis = cv.getAsString(ConfigValues.OVERVIEW);
+
+        return new Movie(id, title, releaseDate, moviePoster, voteAverage, plotSynopsis);
+    }
+
+    public static ContentValues toContentValues(Movie movie){
+        ContentValues cv = new ContentValues();
+        cv.put(ConfigValues.ID, movie.id);
+        cv.put(ConfigValues.TITLE, movie.title);
+        cv.put(ConfigValues.RELEASE_DATE, movie.releaseDate);
+        cv.put(ConfigValues.POSTER_PATH, movie.moviePoster);
+        cv.put(ConfigValues.VOTE_AVERAGE, movie.voteAverage);
+        cv.put(ConfigValues.OVERVIEW, movie.plotSynopsis);
+        return cv;
     }
 
     public int getId() {

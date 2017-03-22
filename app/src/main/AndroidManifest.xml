@@ -29,6 +29,13 @@
             </intent-filter>
         </activity>
 
+        <provider
+            android:name=".utilities.MoviesProvider"
+            android:enabled="true"
+            android:multiprocess="true"
+            android:authorities="com.tobiadeyinka.popularmovies.utilities">
+        </provider>
+
     </application>
 
 </manifest>

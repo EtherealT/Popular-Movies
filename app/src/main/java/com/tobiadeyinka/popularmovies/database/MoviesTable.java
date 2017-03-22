@@ -30,8 +30,8 @@ public class MoviesTable {
         return database.insert(ConfigValues.MOVIES_TABLE, null, cv);
     }
 
-    public void delete(long movieId){
-        database.delete(ConfigValues.MOVIES_TABLE, ConfigValues.ID + " = " + movieId, null);
+    public int delete(long movieId){
+        return database.delete(ConfigValues.MOVIES_TABLE, ConfigValues.ID + " = " + movieId, null);
     }
 
     public boolean contains(long movieId){
