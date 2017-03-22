@@ -1,6 +1,7 @@
 package com.tobiadeyinka.popularmovies.activities;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.Toast;
 import android.view.MenuItem;
 import android.database.Cursor;
@@ -23,9 +24,13 @@ import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
 
 public class MainActivity extends AppCompatActivity{
 
+    private final String LIST_STATE_KEY = "LIST_STATE";
+
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
     private MainActivityStatus status;
+    private RecyclerView.LayoutManager layoutManager;
+    private Bundle listState;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,13 +38,12 @@ public class MainActivity extends AppCompatActivity{
         this.setContentView(R.layout.activity_main);
 
         recyclerView = (RecyclerView) findViewById(R.id.rv_movies);
-        RecyclerView.LayoutManager layoutManager;
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
         movieAdapter = new MovieAdapter(getApplicationContext(), null);
         recyclerView.setAdapter(movieAdapter);
-        sortByPopularity();
+        sortMovies(QueryType.POPULAR);
     }
 
     @Override
@@ -55,35 +59,38 @@ public class MainActivity extends AppCompatActivity{
         super.onOptionsItemSelected(item);
 
         switch (item.getItemId()) {
-            case R.id.popularity: return sortByPopularity();
-            case R.id.rating: return sortByRating();
+            case R.id.popularity: return sortMovies(QueryType.POPULAR);
+            case R.id.rating: return sortMovies(QueryType.TOP_RATED);
             case R.id.favorites: return displayFavorites();
             default: return false;
         }
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        listState = new Bundle();
+        Parcelable listStateParcelable = layoutManager.onSaveInstanceState();
+        listState.putParcelable(LIST_STATE_KEY, listStateParcelable);
+    }
+
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        if (listState != null) {
+            Parcelable listStateParcelable = listState.getParcelable(LIST_STATE_KEY);
+            layoutManager.onRestoreInstanceState(listStateParcelable);
+        }
+    }
+
+    @Override
     protected void onResume() {
-        if (status == MainActivityStatus.FAVORITES) displayFavorites();
         super.onResume();
+        if (status == MainActivityStatus.FAVORITES) displayFavorites();
     }
 
-    /*
-     * Sort movies by popularity
-     */
-    private boolean sortByPopularity(){
+    private boolean sortMovies(QueryType type){
         MoviesQueryTask m = new MoviesQueryTask(getApplicationContext(), movieAdapter, recyclerView);
-        m.query(QueryType.POPULAR);
-        status = MainActivityStatus.NORMAL;
-        return true;
-    }
-
-    /*
-     * Sort movies by rating
-     */
-    private boolean sortByRating(){
-        MoviesQueryTask m = new MoviesQueryTask(getApplicationContext(), movieAdapter, recyclerView);
-        m.query(QueryType.TOP_RATED);
+        m.query(type);
         status = MainActivityStatus.NORMAL;
         return true;
     }
