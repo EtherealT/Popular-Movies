@@ -8,23 +8,27 @@ import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.entities.QueryType;
 import com.tobiadeyinka.popularmovies.database.ConfigValues;
 import com.tobiadeyinka.popularmovies.utilities.MovieAdapter;
 
 import org.json.*;
 import java.io.IOException;
+import java.util.List;
 
 public class MoviesQueryTask extends AsyncTask<QueryType, Void, String>{
 
     private Context context;
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
+    private List<Movie> data;
 
     public MoviesQueryTask(Context context, MovieAdapter movieAdapter, RecyclerView recyclerView){
         this.context = context;
         this.movieAdapter = movieAdapter;
         this.recyclerView = recyclerView;
+        this.data = movieAdapter.getData();
     }
 
     public void query(QueryType queryType){
@@ -66,30 +70,21 @@ public class MoviesQueryTask extends AsyncTask<QueryType, Void, String>{
             JSONObject object = new JSONObject(s);
             JSONArray results = object.getJSONArray("results");
             int n = results.length();
-            JSONObject o;
-
-            MatrixCursor matrixCursor = new MatrixCursor(new String[] {
-                    ConfigValues.ID,
-                    ConfigValues.TITLE,
-                    ConfigValues.RELEASE_DATE,
-                    ConfigValues.POSTER_PATH,
-                    ConfigValues.VOTE_AVERAGE,
-                    ConfigValues.OVERVIEW
-            });
+            data.clear();
+            JSONObject tmp;
 
             for(int i = 0; i < n; i++){
-                o = results.getJSONObject(i);
-                int id = o.getInt(ConfigValues.ID);
-                String title = o.getString(ConfigValues.TITLE);
-                String releaseDate = o.getString(ConfigValues.RELEASE_DATE);
-                String posterPath = o.getString(ConfigValues.POSTER_PATH);
-                String voteAverage = o.getString(ConfigValues.VOTE_AVERAGE);
-                String overview = o.getString(ConfigValues.OVERVIEW);
-                matrixCursor.addRow(new Object[]{id, title,releaseDate, posterPath, voteAverage, overview});
+                tmp = results.getJSONObject(i);
+                int id = tmp.getInt("id");
+                String title = tmp.getString("title");
+                String releaseDate = tmp.getString("release_date");
+                String moviePoster = tmp.getString("poster_path");
+                String voteAverage = tmp.getString("vote_average");
+                String plotSynopsis = tmp.getString("overview");
+                data.add(new Movie(id, title, releaseDate, moviePoster, voteAverage, plotSynopsis));
             }
 
-            movieAdapter = new MovieAdapter(context, matrixCursor);
-            recyclerView.setAdapter(movieAdapter);
+            movieAdapter.notifyDataSetChanged();
 
         } catch (JSONException e) {
             e.printStackTrace();

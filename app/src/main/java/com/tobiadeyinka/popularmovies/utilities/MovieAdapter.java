@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.content.Intent;
 import android.content.Context;
 import android.net.NetworkInfo;
-import android.database.Cursor;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.net.ConnectivityManager;
@@ -17,18 +16,20 @@ import com.tobiadeyinka.popularmovies.R;
 import com.tobiadeyinka.popularmovies.entities.Movie;
 import com.tobiadeyinka.popularmovies.activities.MovieDetailsActivity;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * @author Tobi Adeyinka
  */
 
-public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
-    private Cursor cursor;
+    private final List<Movie> data;
     private Context context;
 
-    public MovieAdapter(Context context, Cursor cursor) {
-        super(context, cursor);
-        this.cursor = cursor;
+    public MovieAdapter(ArrayList<Movie> data) {
+        this.data = data;
     }
 
     @Override
@@ -51,9 +52,13 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
                 int position = viewHolder.getAdapterPosition();
                 Intent intent = new Intent(context, MovieDetailsActivity.class);
 
-                cursor.moveToPosition(position);
-                Movie movie = Movie.fromCursor(cursor);
+                Movie movie = data.get(position);
                 intent.putExtra("id", movie.getId());
+                intent.putExtra("title", movie.getTitle());
+                intent.putExtra("releaseDate", movie.getReleaseDate());
+                intent.putExtra("poster", movie.getMoviePoster());
+                intent.putExtra("voteAverage", movie.getVoteAverage());
+                intent.putExtra("plotSynopsis", movie.getPlotSynopsis());
                 context.startActivity(intent);
             }
         });
@@ -62,19 +67,13 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
     }
 
     @Override
-    public int getItemCount() {
-        return cursor != null ? cursor.getCount() : 0;
+    public void onBindViewHolder(MovieViewHolder holder, int position) {
+        holder.bind(position);
     }
 
     @Override
-    public void onBindViewHolder(MovieViewHolder viewHolder, Cursor cursor) {
-        viewHolder.bind(cursor);
-    }
-
-    private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+    public int getItemCount() {
+        return data.size();
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder{
@@ -85,10 +84,20 @@ public class MovieAdapter extends CursorRecyclerViewAdapter<MovieAdapter.MovieVi
             posterImageView = (ImageView)itemView.findViewById(R.id.movie_item_image);
         }
 
-        void bind(Cursor cursor) {
-            Movie movie = Movie.fromCursor(cursor);
+        void bind(int listIndex) {
+            Movie movie = data.get(listIndex);
             Picasso.with(context).load("https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster()).into(posterImageView);
         }
+    }
+
+    public List<Movie> getData() {
+        return data;
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

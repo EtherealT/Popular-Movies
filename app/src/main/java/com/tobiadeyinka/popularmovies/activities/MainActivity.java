@@ -17,12 +17,15 @@ import com.tobiadeyinka.popularmovies.utilities.MovieAdapter;
 import com.tobiadeyinka.popularmovies.utilities.MoviesProvider;
 import com.tobiadeyinka.popularmovies.networking.MoviesQueryTask;
 
+import java.util.ArrayList;
+
 /**
  * @author Tobi Adeyinka
  */
 
 public class MainActivity extends AppCompatActivity{
 
+    private ArrayList<Movie> data;
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
     private MainActivityStatus status;
@@ -37,7 +40,8 @@ public class MainActivity extends AppCompatActivity{
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        movieAdapter = new MovieAdapter(getApplicationContext(), null);
+        data = new ArrayList<>();
+        movieAdapter = new MovieAdapter(data);
         recyclerView.setAdapter(movieAdapter);
         sortMovies(QueryType.POPULAR);
     }
@@ -89,12 +93,20 @@ public class MainActivity extends AppCompatActivity{
      */
     private boolean displayFavorites(){
         Cursor moviesCursor = getApplicationContext().getContentResolver().query(MoviesProvider.getCONTENT_URI(), null, null, null, null);
+        data.clear();
 
-        movieAdapter = new MovieAdapter(getApplicationContext(), moviesCursor);
-        recyclerView.setAdapter(movieAdapter);
+        try {
+            while (moviesCursor.moveToNext()) {
+                data.add(Movie.fromCursor(moviesCursor));
+            }
+        } finally {
+            moviesCursor.close();
+        }
+
+        movieAdapter.notifyDataSetChanged();
 
         if (moviesCursor.getCount() == 0)
-            Toast.makeText(getApplicationContext(), "No favorite movies saved", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "No favorite data saved", Toast.LENGTH_LONG).show();
 
         status = MainActivityStatus.FAVORITES;
         return true;
